@@ -23,11 +23,17 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 
 nest_asyncio.apply()
 
+
 async def takeScreenshot(page, count):
     screenshotFileName = 'screenshot' + str(count) + '.png';
     if(enableScreenshotting):
         logging.debug('Taking Screenshot ' + str(count))
         await page.screenshot({'path': screenshotFileName})
+
+async def typeOnPage(page, identifier, valueToType):
+    # await takeScreenshot(page,'before:'+identifier)
+    await page.type(identifier, valueToType, { 'delay': 50 });
+    await takeScreenshot(page,'after:'+identifier)
 
 def getAuthToken():
     totp = TOTP(totpSecret)
@@ -46,23 +52,19 @@ def getAccessToken(kite):
         page = await browser.newPage()
         await page.goto(getLoginUrl(kite));
         time.sleep(2)
-        await takeScreenshot(page,1)
         logging.debug('Entering userId = ' + userId + ' and password = ' + userPass );
-        await page.type('input#userid', userId, { 'delay': 50 });
-        await page.type('input#password', userPass, { 'delay': 50 });
+        await typeOnPage(page, 'input#userid', userId)
+        await typeOnPage(page, 'input#password', userPass)
         await page.click('button.button-orange.wide');
-        await takeScreenshot(page,2)
         time.sleep(2)
         authOtp = getAuthToken()
         logging.debug('Entering auth otp = ' + authOtp);
-        await takeScreenshot(page,3)
-        await page.type('input#totp', authOtp, { 'delay': 50 });
-        await takeScreenshot(page,4)
+        await typeOnPage(page, 'input#totp', authOtp)
         await page.click('button.button-orange.wide');
         response = await page.waitForNavigation()
         accessToken = getRequestAccessTokenFromUrl(response.url)
         logging.debug('Generated request access token = '+ accessToken)
-        await takeScreenshot(page,5)
+        await takeScreenshot(page,'accessTokenScreenshot')
         # Logs show up in the browser's devtools
         await browser.close()
         return accessToken
