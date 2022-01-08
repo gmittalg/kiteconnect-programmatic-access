@@ -77,8 +77,16 @@ def getAuthenticatedKite():
     logging.basicConfig(level=logging.INFO)
     return kite
 
+def getInstruments(kite):
+    logging.debug('Fetching all instruments');
+    instruments = {} 
+    for i in kite.instruments():
+        if i['tradingsymbol'] not in instruments:
+            instruments[i['tradingsymbol']] = []
+        instruments[i['tradingsymbol']].append(i);
+    return instruments;
+
 kite = getAuthenticatedKite()
-instruments = kite.instruments();
-mutualFundInstruments = kite.mf_instruments();
+instruments = getInstruments(kite);
 
 
