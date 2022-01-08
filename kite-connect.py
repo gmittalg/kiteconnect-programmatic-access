@@ -81,9 +81,10 @@ def getInstruments(kite):
     logging.debug('Fetching all instruments');
     instruments = {} 
     for i in kite.instruments():
-        if i['tradingsymbol'] not in instruments:
-            instruments[i['tradingsymbol']] = []
-        instruments[i['tradingsymbol']].append(i);
+        key = i['exchange']+':'+i['tradingsymbol']
+        if key not in instruments:
+            instruments[key] = []
+        instruments[key].append(i);
     return instruments;
 
 kite = getAuthenticatedKite()
