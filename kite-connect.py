@@ -76,3 +76,9 @@ def getAuthenticatedKite():
     kite.set_access_token(data["access_token"])
     logging.basicConfig(level=logging.INFO)
     return kite
+
+kite = getAuthenticatedKite()
+instruments = kite.instruments();
+mutualFundInstruments = kite.mf_instruments();
+
+
