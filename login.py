@@ -7,8 +7,6 @@ import nest_asyncio
 from urllib.parse import urlparse , parse_qs
 from pyppeteer import launch
 from datetime import datetime, timedelta;
-import websocket
-import sys
 
 apiKey = 'yourApiKey'
 apiSecret = 'yourApiSecret'
@@ -22,7 +20,6 @@ logging.getLogger('asyncio').setLevel(logging.WARNING)
 logging.getLogger('asyncio.coroutines').setLevel(logging.WARNING)
 logging.getLogger('websockets').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
-websocket.enableTrace(False)
 
 nest_asyncio.apply()
 
